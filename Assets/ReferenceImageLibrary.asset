@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
   m_Name: ReferenceImageLibrary
   m_EditorClassIdentifier: 
-  m_GuidLow: 0
-  m_GuidHigh: 0
+  m_GuidLow: 5499145915276786362
+  m_GuidHigh: 8275695690874914461
   m_DataStore:
     m_Storage: []
   m_Images:
@@ -27,3 +27,13 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: puddle
     m_Texture: {fileID: 2800000, guid: 2b1feab903b6efa4f83c468680c0cf1e, type: 3}
+  - m_SerializedGuid:
+      m_GuidLow: 5704919426528306481
+      m_GuidHigh: 6713153971824399515
+    m_SerializedTextureGuid:
+      m_GuidLow: 6869128593026960502
+      m_GuidHigh: 17883163063068740201
+    m_Size: {x: 0.06, y: 0.06}
+    m_SpecifySize: 1
+    m_Name: shiptwo
+    m_Texture: {fileID: 2800000, guid: a7d9cc760c0f5f54694a998a0ec22df8, type: 3}
