@@ -20,7 +20,6 @@ public class Interactions : MonoBehaviour
     public void selected()
     {
 
-        Debug.Log("show annotation");
         if (annotationVisible)
         {
             annotation.SetActive(false);
