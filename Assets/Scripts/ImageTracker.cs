@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation; // include xr library
+using UnityEngine.XR.ARFoundation; 
 
 public class ImageTracker : MonoBehaviour
 {
     [SerializeField]
     ARTrackedImageManager m_TrackedImageManager;
-    public GameObject shipPrefab; //Prefab you want to appear on marker image
+    public GameObject shipPrefab; 
+    public GameObject shipTwoPrefab; 
 
     void OnEnable() => m_TrackedImageManager.trackedImagesChanged += OnChanged;
 
@@ -15,13 +16,20 @@ public class ImageTracker : MonoBehaviour
 
     void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        // When the camera picks up a new image marker Unity adds a game object to it called newImage, this will stick to maker.
+     
         foreach (ARTrackedImage newImage in eventArgs.added)
         {
-            // Create new copy of your prefab
-            GameObject newObject = GameObject.Instantiate(shipPrefab);
-            // parent prefab to the newImage so that they stick together.
-            newObject.transform.SetParent(newImage.transform, false);
+           
+            if (newImage.referenceImage.name == "puddle")
+            {
+                GameObject newObject = GameObject.Instantiate(shipPrefab);
+                newObject.transform.SetParent(newImage.transform, false);
+            }
+            else if (newImage.referenceImage.name == "shiptwo")
+            {
+                GameObject newObject = GameObject.Instantiate(shipTwoPrefab);
+                newObject.transform.SetParent(newImage.transform, false);
+            }
         }
     }
 }

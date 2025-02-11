@@ -7,6 +7,15 @@ public class Interactions : MonoBehaviour
 
     bool annotationVisible = false; 
     public GameObject annotation;
+    public AudioSource audioSource;
+
+    void Start()
+    {
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+        }
+    }
 
     public void selected()
     {
@@ -16,10 +25,21 @@ public class Interactions : MonoBehaviour
         {
             annotation.SetActive(false);
             annotationVisible = false;
-        }else {
+            if (audioSource != null && audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+        }
+        else {
             annotation.SetActive(true);
             annotationVisible = true;
+            if (audioSource != null)
+            {
+                audioSource.Play();
+            }
         }
 
     }
 }
+
+
