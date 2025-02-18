@@ -6,9 +6,11 @@ using UnityEngine.XR.ARFoundation;
 public class ImageTracker : MonoBehaviour
 {
     [SerializeField]
-    ARTrackedImageManager m_TrackedImageManager;
+    private ARTrackedImageManager m_TrackedImageManager;
     public GameObject shipPrefab; 
     public GameObject shipTwoPrefab; 
+
+    private Dictionary<string, GameObject> spawnedObjects = new Dictionary<string, GameObject>();
 
     void OnEnable() => m_TrackedImageManager.trackedImagesChanged += OnChanged;
 
@@ -16,20 +18,61 @@ public class ImageTracker : MonoBehaviour
 
     void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-     
         foreach (ARTrackedImage newImage in eventArgs.added)
         {
-           
-            if (newImage.referenceImage.name == "puddle")
+            UpdateTrackableImage(newImage);
+        }
+
+        foreach (ARTrackedImage updatedImage in eventArgs.updated)
+        {
+            if (updatedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
             {
-                GameObject newObject = GameObject.Instantiate(shipPrefab);
-                newObject.transform.SetParent(newImage.transform, false);
+                UpdateTrackableImage(updatedImage);
             }
-            else if (newImage.referenceImage.name == "shiptwo")
+            else if (updatedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Limited)
             {
-                GameObject newObject = GameObject.Instantiate(shipTwoPrefab);
-                newObject.transform.SetParent(newImage.transform, false);
+                if (spawnedObjects.ContainsKey(updatedImage.referenceImage.name))
+                {
+                    spawnedObjects[updatedImage.referenceImage.name].SetActive(false);
+                }
+            }
+        }
+
+        foreach (ARTrackedImage removedImage in eventArgs.removed)
+        {
+            if (spawnedObjects.ContainsKey(removedImage.referenceImage.name))
+            {
+                Destroy(spawnedObjects[removedImage.referenceImage.name]);
+                spawnedObjects.Remove(removedImage.referenceImage.name);
             }
         }
     }
+
+    private void UpdateTrackableImage(ARTrackedImage trackedImage)
+    {
+        string imageName = trackedImage.referenceImage.name;
+        GameObject prefabToSpawn = null;
+
+        if (imageName == "puddle" || imageName == "shiptwo")
+        {
+            prefabToSpawn = imageName == "puddle" ? shipPrefab : shipTwoPrefab;
+        }
+
+        if (prefabToSpawn != null)
+        {
+            GameObject spawnedObject;
+            
+            if (!spawnedObjects.TryGetValue(imageName, out spawnedObject))
+            {
+                spawnedObject = Instantiate(prefabToSpawn, trackedImage.transform.position, trackedImage.transform.rotation);
+                spawnedObject.transform.SetParent(trackedImage.transform, false);
+                spawnedObjects.Add(imageName, spawnedObject);
+            }
+            else
+            {
+                spawnedObject.SetActive(true);
+            }
+        }
+    }
+    
 }
